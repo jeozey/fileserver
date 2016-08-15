@@ -37,8 +37,13 @@ public class FileSystemRepository implements Repository {
     @Override
     public synchronized String addFileResource(FileResource fileResource) throws RepositoryStorageException {
         try {
-            final String id = namingScheme.newFile();
-            String dirPath = repositoryDirectory + namingScheme.getPath(id);
+        	//modify by jeo :not change the url and filename
+            final String id = fileResource.getMetadata().getFilename();
+            String dirPath = repositoryDirectory;
+            
+            
+//          final String id = namingScheme.newFile();
+//            String dirPath = repositoryDirectory + namingScheme.getPath(id);
 
             assertDirectoryPresent(dirPath);
 
@@ -98,12 +103,15 @@ public class FileSystemRepository implements Repository {
     @Override
     public FileResource getFileResource(String id) throws RepositoryStorageException {
         byte[] data = null;
-        String path = null;
+//        String path = null;
         try {
-            path = namingScheme.getPath(id);
-            data = FileSystemUtils.getBytesFromFile(repositoryDirectory + path + id);
+        	//modify by jeo
+//            path = namingScheme.getPath(id);
+            data = FileSystemUtils.getBytesFromFile(repositoryDirectory + id);
+//            path = namingScheme.getPath(id);
+//            data = FileSystemUtils.getBytesFromFile(repositoryDirectory + path + id);
         } catch (IOException e) {
-            throw new RepositoryStorageException("Could not open file " + repositoryDirectory + path + id, e);
+            throw new RepositoryStorageException("Could not open file " + repositoryDirectory  + id, e);
         }
         return new FileResource(id, data);
     }
